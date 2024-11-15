@@ -17,6 +17,7 @@ import EditIssueForm from './components/EditIssueForm';
 import Members from './components/Members';
 import AddMember from './components/AddMember';
 import EditMemberForm from './components/EditMemberForm';
+import ReportPage from './components/ReportPage';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
       <NavBar/>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/books/report" element={<ReportPage />} />
         <Route path="/login" element={<LoginForm />} /> 
         <Route path="/books" element={<Books />} />  
         <Route path="/members" element={<Members />} />  
