@@ -80,9 +80,9 @@ const BookDetails = () => {
             
             const memberId = window.prompt("Enter member Id: ");
             if (memberId)
-              await axios.put(`http://localhost:8080/books/${id}/issues/return?memberId=${memberId}`, null, { withCredentials: true }).then((response) => {
+              await axios.put(`http://localhost:8080/books/${id}/issues/return?memberId=${memberId}`, null, { withCredentials: true }).then(async (response) => {
                 alert("Status code: " + response.status + ", Book successfully returned!");
-                updateQty("increase");
+                await updateQty("increase");
                 navigate("/books");
               })
                 .catch((err) => window.alert("Status code: " + err.status + ", No issues found for the book with member ID: "+memberId));

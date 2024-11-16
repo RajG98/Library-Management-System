@@ -17,17 +17,12 @@ import java.util.List;
 public class MemberController {
     @Autowired
     private MemberService service;
-    @GetMapping("/{id}/secure-endpoint")
+    @GetMapping("/{id}")
     public ResponseEntity<Member> getMemberById(@PathVariable String id){
-        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
-        String role=authentication.getAuthorities().toString();
-        if(role.contains("ROLE_ADMIN")) {
+
         Member member= service.getMemberById(id);
         return new ResponseEntity<>(member, HttpStatus.OK);
-        }else if(role.contains("ROLE_USER")){
-            throw new UnauthorizedException("You are not authorized to access this resource");
-        }
-        throw new UnauthorizedException("User role not recognized");
+
     }
     @GetMapping("/search")
     public ResponseEntity<List<Member>> getMemberByName(@RequestParam(value = "name",defaultValue = "") String memberName){

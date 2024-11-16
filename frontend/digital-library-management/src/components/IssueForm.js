@@ -26,16 +26,16 @@ const IssueBook = () => {
     const checkMemberExists = async (memberId) => {
         try {
             const response = await axios.get(`http://localhost:8080/books/${id}/issues/member/${memberId}`, { withCredentials: true });
-            
+
             // Return true if member does not exist, i.e., data length is 0
             return response.data.length !== 0;
-            
+
         } catch (err) {
             console.log("Something went wrong!", err);
             return true; // Returning true as a fallback in case of an error
         }
     };
-    
+
     const updateQty = async (action) => {
         try {
             const response = await axios.put(`http://localhost:8080/books/${id}/quantity/${action}`, action, {
@@ -61,7 +61,7 @@ const IssueBook = () => {
         if (booking === "CONFIRMED") {
             date = new Date(document.getElementById("bookingDate").value);
             const today = new Date();
-            
+
             if (date < today) {
                 alert("Date cannot be in the past!");
                 return;
@@ -81,7 +81,7 @@ const IssueBook = () => {
 
             if (response.status === 201) {
                 alert("Book issued successfully!");
-                updateQty("decrease");
+                await updateQty("decrease");
                 navigate("/books");
             }
         } catch (error) {

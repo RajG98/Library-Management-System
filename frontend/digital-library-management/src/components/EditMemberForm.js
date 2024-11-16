@@ -16,7 +16,7 @@ const EditMemberForm = () => {
   }, [id]);
   const fetchMember = (id) => {
     try {
-      axios.get(`http://localhost:8080/members/${id}/secure-endpoint`, { withCredentials: true })
+      axios.get(`http://localhost:8080/members/${id}`, { withCredentials: true })
         .then((response) => {
           setMember(response.data);
       })

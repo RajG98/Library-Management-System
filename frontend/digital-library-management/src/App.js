@@ -1,8 +1,8 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import NavBar from './components/NavBar';
 import LoginForm from './components/LoginForm';
@@ -18,30 +18,132 @@ import Members from './components/Members';
 import AddMember from './components/AddMember';
 import EditMemberForm from './components/EditMemberForm';
 import ReportPage from './components/ReportPage';
+import { useAuth } from './context/AuthContext';
+
+const ProtectedRoute = ({ isAuthenticated, children }) => {
+  if (isAuthenticated === null) {
+    // Optional loading spinner or placeholder
+    return <div>Loading...</div>;
+  }
+
+  return isAuthenticated ? children : <Navigate to="/login" replace />;
+};
 
 const App = () => {
+  const { user } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Initialize state from localStorage on the first render
+    return !!localStorage.getItem("user");
+  });
+  useEffect(() => {
+    setIsAuthenticated(!!localStorage.getItem("user"));
+  },[user])
+
   return (
     <Router>
-      <NavBar/>
+      <NavBar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/books/report" element={<ReportPage />} />
-        <Route path="/login" element={<LoginForm />} /> 
-        <Route path="/books" element={<Books />} />  
-        <Route path="/members" element={<Members />} />  
-        <Route path="/books/:id/details" element={<BookDetails />} /> 
-        <Route path="/books/:id/issue" element={<IssueForm />} /> 
-        <Route path="/books/:id/details/issueHistory" element={<IssueHistory />} /> 
-        <Route path="/books/:id/details/edit" element={<EditBookForm />} /> 
-        <Route path="/members/:id/edit" element={<EditMemberForm />} /> 
-        <Route path="/books/add" element={<AddBook />} /> 
-        <Route path="/members/add" element={<AddMember />} /> 
-        <Route path="/books/:id/details/issueHistory/:issueId/edit" element={<EditIssueForm />} /> 
-        <Route path="*" element={<NotFound />} /> {/* Catch-all for 404 */}
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/report"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <ReportPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Books />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/members"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Members />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/:id/details"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <BookDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/:id/issue"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <IssueForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/:id/details/issueHistory"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <IssueHistory />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/:id/details/edit"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <EditBookForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/members/:id/edit"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <EditMemberForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/add"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AddBook />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/members/add"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <AddMember />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/books/:id/details/issueHistory/:issueId/edit"
+          element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <EditIssueForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={isAuthenticated?<Navigate to="/"/>:<LoginForm />}/>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
 };
 
 export default App;
-

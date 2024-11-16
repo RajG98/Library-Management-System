@@ -28,6 +28,12 @@ public class IssueController {
 
         return new ResponseEntity<>(issue, HttpStatus.OK);
     }
+    @GetMapping("/{bookId}/issues/member/{memberId}")
+    public ResponseEntity<List<Issue>> getMemberIssues(@PathVariable String bookId,@PathVariable String memberId){
+        List<Issue> issues= service.getIssueForMemberId(memberId,bookId);
+        return new ResponseEntity<>(issues,HttpStatus.OK);
+    }
+
     @PostMapping("/{id}/issues")
     public ResponseEntity<Issue> issueBook(@PathVariable int id,@RequestBody Issue i){
         Issue issue=service.issueBook(i);

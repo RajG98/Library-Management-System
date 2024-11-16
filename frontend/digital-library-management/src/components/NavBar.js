@@ -6,11 +6,16 @@ const NavBar = () => {
   const location = useLocation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const handleLogout = (e) => {
-    e.preventDefault();
-    logout();
-    navigate("/login");
-  }
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -19,10 +24,8 @@ const NavBar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-
           {!user ? (
             <ul className="navbar-nav me-auto">
-
               <li className="nav-item">
                 <Link className={`nav-link ${location.pathname === '/login' ? 'active' : ''}`} to="/login">Login</Link>
               </li>
@@ -34,18 +37,17 @@ const NavBar = () => {
               </li>
               <li className="nav-item">
                 <Link className={`nav-link ${location.pathname === '/books' ? 'active' : ''}`} to="/books">Books</Link>
+              </li>
+              {user.username === "admin" && (
+                <li className="nav-item">
+                  <Link className={`nav-link ${location.pathname === '/members' ? 'active' : ''}`} to="/members">Members</Link>
                 </li>
-                {user.username === "admin" &&
-                  <li className="nav-item">
-                    <Link className={`nav-link ${location.pathname === '/members' ? 'active' : ''}`} to="/members">Members</Link>
-                  </li>
-                }
+              )}
               <li className="nav-item">
-                <Link className="nav-link" onClick={handleLogout}>Logout</Link>
+                <button className="nav-link btn btn-link" onClick={handleLogout}>Logout</button>
               </li>
             </ul>
           )}
-
         </div>
       </div>
     </nav>
