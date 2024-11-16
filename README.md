@@ -1,6 +1,5 @@
-Here’s a sample `README.md` for your Library Management System project:
 
-```markdown
+
 # Library Management System
 
 This is a full-stack Library Management System built using **Spring Boot** for the backend and **React** for the frontend. It is designed to manage books, members, and issue records efficiently, with user authentication and role-based access control.
