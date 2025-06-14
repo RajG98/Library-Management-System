@@ -1,16 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const AddMember = () => {
+const EditMemberForm = () => {
   const [member, setMember] = useState({
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    createdAt: "",
-    validTill: ""
+    validTill:""
   });
+  const { id } = useParams();
+  useEffect(() => {
+    fetchMember(id);
+  }, [id]);
+  const fetchMember = (id) => {
+    try {
+      axios.get(`${process.env.REACT_APP_API_BASE_URL}/members/${id}`, { withCredentials: true })
+        .then((response) => {
+          setMember(response.data);
+      })
+    } catch (err) {
+      console.err("Something went wrong!", err);
+    }
+  }
 
   const navigate = useNavigate();
 
@@ -24,15 +37,8 @@ const AddMember = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const date = new Date(document.getElementById("validTill").value);
-    const today = new Date();
-
-    if (date < today) {
-      alert("Enter valid Date!");
-      return;
-    }
     try {
-      await axios.post("http://localhost:8080/members/secure-endpoint", {...member, createdAt:new Date()}, {
+      await axios.put(`${process.env.REACT_APP_API_BASE_URL}/members/${id}/secure-endpoint`, member, {
         withCredentials: true
       });
       navigate("/members"); // Redirect to members list after successful addition
@@ -43,7 +49,7 @@ const AddMember = () => {
 
   return (
     <div className="container mt-4">
-      <h2>Add New Member</h2>
+      <h2>Edit Member</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="firstName" className="form-label">
@@ -116,11 +122,11 @@ const AddMember = () => {
           />
         </div>
         <button type="submit" className="btn btn-primary">
-          Add Member
+          Save Member
         </button>
       </form>
     </div>
   );
 };
 
-export default AddMember;
+export default EditMemberForm;

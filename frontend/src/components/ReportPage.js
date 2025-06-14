@@ -9,7 +9,7 @@ const ReportPage = () => {
   useEffect(() => {
     const fetchReport = async () => {
       try {
-          const response = await axios.get("http://localhost:8080/books/report/secure-endpoint",{withCredentials:true})
+          const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/report/secure-endpoint`,{withCredentials:true})
         setReportData(response.data);
       } catch (err) {
         setError(err.message);

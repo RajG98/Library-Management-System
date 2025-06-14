@@ -7,11 +7,11 @@ const IssueHistory = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [issues, setIssues] = useState([]);
-    
+
   const { user } = useAuth();
   useEffect(() => {
-    const getIssues =async () => {
-      await axios.get(`http://localhost:8080/books/${id}/issues`, { withCredentials: true })
+    const getIssues = async () => {
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/issues`, { withCredentials: true })
         .then(response => {
           // console.log(response.data);
           setIssues(response.data);
@@ -19,11 +19,11 @@ const IssueHistory = () => {
         .catch((err) => console.error("Something went wrong!", err.message));
     }
     getIssues();
-    }, [])
+  })
   return (
     <div className='container-fluid'>
-      {user?.username === "admin" ?(
-      <><div className=" d-flex align-items-center justify-content-start flex-wrap my-3">
+      {user?.username === "admin" ? (
+        <><div className=" d-flex align-items-center justify-content-start flex-wrap my-3">
           <h2 className="mb-0 flex-shrink-0">Issue History</h2>
           <button className="btn btn-outline-secondary ms-lg-3  ms-sm-1" onClick={() => navigate("/books")}>BackToMenu</button>
         </div><table className="table">
@@ -53,7 +53,7 @@ const IssueHistory = () => {
                     <td>{issues.issuedStatus}</td>
                     <td>{issues.fine}</td>
                     <td>
-                      <button onClick={()=>navigate(`${issues.id}/edit`)} className="btn btn-light ">Edit</button>
+                      <button onClick={() => navigate(`${issues.id}/edit`)} className="btn btn-light ">Edit</button>
 
                     </td>
                   </tr>
@@ -65,7 +65,7 @@ const IssueHistory = () => {
               )}
             </tbody>
           </table></>
-        ):<NotAllowed/>}
+      ) : <NotAllowed />}
     </div>
   )
 }

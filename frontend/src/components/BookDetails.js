@@ -11,7 +11,7 @@ const BookDetails = () => {
   useEffect(() => {
     const fetchData = async () => {
       await axios
-        .get(`http://localhost:8080/books/${id}`, {
+        .get(`${process.env.REACT_APP_API_BASE_URL}/books/${id}`, {
           withCredentials: true,
         })
         .then((response) => {
@@ -27,7 +27,7 @@ const BookDetails = () => {
   }, [id]);
   const handleDelete = async () => {
     await axios
-      .delete(`http://localhost:8080/books/${id}/secure-endpoint`, {
+      .delete(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/secure-endpoint`, {
         withCredentials: true,
       })
       .then((response) => {
@@ -41,7 +41,7 @@ const BookDetails = () => {
   };
   const updateQty = async (action) => {
     try {
-      const response = await axios.put(`http://localhost:8080/books/${id}/quantity/${action}`, action, {
+      const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/quantity/${action}`, action, {
         withCredentials: true
       });
       if (response.status === 200) {
@@ -88,7 +88,7 @@ const BookDetails = () => {
 
             const memberId = window.prompt("Enter member Id: ");
             if (memberId)
-              await axios.put(`http://localhost:8080/books/${id}/issues/return?memberId=${memberId}`, null, { withCredentials: true }).then(async (response) => {
+              await axios.put(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/issues/return?memberId=${memberId}`, null, { withCredentials: true }).then(async (response) => {
                 alert("Status code: " + response.status + ", Book successfully returned!");
                 await updateQty("increase");
                 navigate("/books");

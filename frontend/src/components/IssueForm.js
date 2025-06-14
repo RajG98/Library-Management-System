@@ -12,7 +12,7 @@ const IssueBook = () => {
     const checkMemberId = async (memId) => {
         if (memId) {
             try {
-                const response = await axios.get(`http://localhost:8080/members/${memId}`, { withCredentials: true });
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/members/${memId}`, { withCredentials: true });
                 if (response.status === 200) {
                     return true;
                 }
@@ -25,7 +25,7 @@ const IssueBook = () => {
     };
     const checkMemberExists = async (memberId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/books/${id}/issues/member/${memberId}`, { withCredentials: true });
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/issues/member/${memberId}`, { withCredentials: true });
 
             // Return true if member does not exist, i.e., data length is 0
             return response.data.length !== 0;
@@ -38,7 +38,7 @@ const IssueBook = () => {
 
     const updateQty = async (action) => {
         try {
-            const response = await axios.put(`http://localhost:8080/books/${id}/quantity/${action}`, action, {
+            const response = await axios.put(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/quantity/${action}`, action, {
                 withCredentials: true
             });
             if (response.status === 200) {
@@ -72,7 +72,7 @@ const IssueBook = () => {
             return;
         }
         try {
-            const response = await axios.post(`http://localhost:8080/books/${id}/issues`, {
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/issues`, {
                 book: { id },
                 member: { id: memberId },
                 issuedStatus: booking,

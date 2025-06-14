@@ -11,7 +11,7 @@ const EditIssueForm = () => {
         dueDate: "",
         issuedStatus: "",
         fine: "",
-        returnDate:""
+        returnDate: ""
     });
 
     const status = ["ISSUED", "RETURNED", "PENDING", "CONFIRMED", "CANCELED"];
@@ -19,7 +19,7 @@ const EditIssueForm = () => {
     useEffect(() => {
         const fetchIssueData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/books/${id}/issues/${issueId}`, { withCredentials: true });
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/issues/${issueId}`, { withCredentials: true });
                 setIssue(response.data);
             } catch (err) {
                 console.error("Something went wrong", err);
@@ -37,24 +37,24 @@ const EditIssueForm = () => {
         e.preventDefault();
         console.log(issue)
         try {
-            const updatedIssue = { 
-                ...issue, 
-                returnDate: (issue.issuedStatus === "RETURNED" && !issue.returnDate) 
-                    ? new Date().toISOString().slice(0, 10) 
-                    : (issue.issuedStatus !== "RETURNED") 
-                    ? "" 
-                    : issue.returnDate 
+            const updatedIssue = {
+                ...issue,
+                returnDate: (issue.issuedStatus === "RETURNED" && !issue.returnDate)
+                    ? new Date().toISOString().slice(0, 10)
+                    : (issue.issuedStatus !== "RETURNED")
+                        ? ""
+                        : issue.returnDate
             };
-        
+
             // Make the PUT request
-            const response = await axios.put(
-                `http://localhost:8080/books/${issueId}/issues`,
+            await axios.put(
+                `${process.env.REACT_APP_API_BASE_URL}/books/${issueId}/issues`,
                 updatedIssue,
                 { withCredentials: true }
             )
-                .then((response)=>console.log(response.data));
+                .then((response) => console.log(response.data));
             alert("Issue updated successfully!");
-            navigate(`/books/${id}/details/issueHistory`); 
+            navigate(`/books/${id}/details/issueHistory`);
         } catch (error) {
             console.error("Error updating the issue:", error);
             alert("An error occurred while updating the issue.");
@@ -119,7 +119,7 @@ const EditIssueForm = () => {
                         ))}
                     </select>
                 </div>
-                {issue.issuedStatus==="RETURNED"?<div className="form-group mb-3">
+                {issue.issuedStatus === "RETURNED" ? <div className="form-group mb-3">
                     <label htmlFor="returnDate">Return Date</label>
                     <input
                         type="date"
@@ -130,7 +130,7 @@ const EditIssueForm = () => {
                         onChange={handleChange}
                         required
                     />
-                </div>:""}
+                </div> : ""}
                 <div className="form-group mb-3">
                     <label htmlFor="fine">Fine</label>
                     <input

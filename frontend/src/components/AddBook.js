@@ -23,7 +23,7 @@ const AddBook = () => {
             alert("Enter a valid publication Year!");
             return;
         }
-        await axios.post("http://localhost:8080/books/secure-endpoint", { ...book, createdAt: new Date().toLocaleDateString, updatedAt: new Date().toLocaleDateString }, {
+        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/books/secure-endpoint`, { ...book, createdAt: new Date().toLocaleDateString, updatedAt: new Date().toLocaleDateString }, {
             withCredentials: true, headers: {
                 "Content-Type": "application/json"
             }
@@ -42,7 +42,7 @@ const AddBook = () => {
     };
     useEffect(() => {
         const fetchCategories = async () => {
-            await axios.get("http://localhost:8080/books/categories", { withCredentials: true })
+            await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/categories`, { withCredentials: true })
                 .then((response) => setGenres(response.data)).catch((err) => console.error("Something went wrong", err));
         };
         fetchCategories();

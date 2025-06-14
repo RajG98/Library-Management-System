@@ -12,15 +12,15 @@ const Books = () => {
   const handleSearch = async (e) => {
     e?.preventDefault();
     if (input)
-      await axios.get(`http://localhost:8080/books?search=${input}`, { withCredentials: true })
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books?search=${input}`, { withCredentials: true })
         .then((response) => setBooks(response.data)).catch((err) => console.error("Something went wrong", err));
     else fetchBooks();
   }
   useEffect(() => {
-    
+
     handleSearch();
     const fetchCategories = async () => {
-      await axios.get("http://localhost:8080/books/categories", { withCredentials: true })
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/categories`, { withCredentials: true })
         .then((response) => setCategories(response.data)).catch((err) => console.error("Something went wrong", err));
     };
     fetchCategories();
@@ -28,7 +28,7 @@ const Books = () => {
   }, [input]);
   const fetchBooks = async () => {
     await axios
-      .get("http://localhost:8080/books", {
+      .get(`${process.env.REACT_APP_API_BASE_URL}/books`, {
         withCredentials: true
       })
       .then((response) => {
@@ -47,13 +47,13 @@ const Books = () => {
   }
   const handleCategoryChange = async (e) => {
     if (e.target.value !== "")
-      await axios.get(`http://localhost:8080/books/categories/${e.target.value}`, { withCredentials: true })
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/categories/${e.target.value}`, { withCredentials: true })
         .then((response) => {
           setBooks(response.data);
         }).catch((err) => console.error("Something went wrong", err));
     else fetchBooks();
   }
-  
+
   return (
     <div className="container-fluid">
       <div className=" d-flex justify-content-between my-3">
@@ -79,7 +79,7 @@ const Books = () => {
               placeholder="Search"
               aria-label="Search"
               name="search"
-              onChange={ (e) => {
+              onChange={(e) => {
                 setInput(e.target.value)
               }}
             />

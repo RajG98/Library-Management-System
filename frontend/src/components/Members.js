@@ -15,7 +15,7 @@ const Members = () => {
 
   const fetchMembers = async () => {
     await axios
-      .get("http://localhost:8080/members/secure-endpoint", {
+      .get(`${process.env.REACT_APP_API_BASE_URL}/members/secure-endpoint`, {
         withCredentials: true
       })
       .then((response) => {
@@ -28,7 +28,7 @@ const Members = () => {
 
   const handleDeleteMember = async (memberId) => {
     await axios
-      .delete(`http://localhost:8080/members/${memberId}/secure-endpoint`, { withCredentials: true })
+      .delete(`${process.env.REACT_APP_API_BASE_URL}/members/${memberId}/secure-endpoint`, { withCredentials: true })
       .then(() => {
         fetchMembers(); // Refresh member list after deletion
       })
@@ -41,7 +41,7 @@ const Members = () => {
     e?.preventDefault();
     if (input)
       await axios
-        .get(`http://localhost:8080/members/search?name=${input}`, { withCredentials: true })
+        .get(`${process.env.REACT_APP_API_BASE_URL}/members/search?name=${input}`, { withCredentials: true })
         .then((response) => setMembers(response.data))
         .catch((err) => console.error("Something went wrong", err));
     else fetchMembers();

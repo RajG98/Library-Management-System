@@ -34,7 +34,7 @@ const EditBookForm = () => {
             alert("Enter a valid publication Year!");
             return;
         }
-        axios.put(`http://localhost:8080/books/${id}/secure-endpoint`, { ...book,updatedAt:new Date().toLocaleDateString }, {
+        axios.put(`${process.env.REACT_APP_API_BASE_URL}/books/${id}/secure-endpoint`, { ...book,updatedAt:new Date().toLocaleDateString }, {
             withCredentials: true, headers: {
             "Content-Type":"application/json"
             }
@@ -53,13 +53,13 @@ const EditBookForm = () => {
   };
   useEffect(() => {
     const fetchBookData = async () => {
-      await axios.get(`http://localhost:8080/books/${id}`, { withCredentials: true })
+      await axios.get(`${process.env.REACT_APP_API_BASE_URL}/books/${id}`, { withCredentials: true })
         .then((response) => {
           setBook(response.data);
         }).catch((err) => console.error("Something went wrong", err));
     }
     fetchBookData();
-  },[])
+  })
 
     return (
         <div className="container mt-5">

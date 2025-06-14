@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     
     const login = async (userData) => {
         try {
-            const response = await axios.post("http://localhost:8080/login", userData, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/login`, userData, { headers: { 'Content-Type': 'application/json' }, withCredentials: true });
             if (response.status === 200) {
                 console.log("Login Successful");
                 localStorage.setItem("user", JSON.stringify(userData));
@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
         }
     }
     const logout = async () => {
-        const response = await axios.post("http://localhost:8080/logout");
+        const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/logout`);
         console.log(response.data);
         localStorage.removeItem("user");
         setUser(null);
