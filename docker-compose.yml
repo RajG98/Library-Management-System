@@ -9,7 +9,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-    - DB_URL=jdbc:mysql://host.docker.internal:3306/library?createDatabaseIfNotExist=true
+    - DB_URL=jdbc:postgresql://db.fkjwjgbotfrgimmwvavu.supabase.co:5432/postgres?user=postgres&password=aDsoGw7C5NzaZUCp
       
 
   frontend:
