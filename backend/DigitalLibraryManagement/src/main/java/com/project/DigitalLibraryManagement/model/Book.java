@@ -35,6 +35,7 @@ public class Book {
     @Column(name = "updated_at")
     private LocalDate updatedAt= LocalDate.now();
     @JsonIgnore
-    @OneToMany(mappedBy = "book",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues;
+
 }

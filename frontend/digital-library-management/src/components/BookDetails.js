@@ -17,7 +17,11 @@ const BookDetails = () => {
         .then((response) => {
           setBook(response.data);
           // console.log(response.data);
-        });
+        }).catch((err) => {
+
+          alert("Something went wrong");
+          console.error("Something went wrong", err);
+        })
     };
     fetchData();
   }, [id]);
@@ -29,20 +33,24 @@ const BookDetails = () => {
       .then((response) => {
         console.log(response.status);
         navigate("/books");
-      });
+      }).catch((err) => {
+
+        alert("Something went wrong");
+        console.error("Something went wrong", err);
+      })
   };
   const updateQty = async (action) => {
     try {
-        const response = await axios.put(`http://localhost:8080/books/${id}/quantity/${action}`, action, {
-            withCredentials: true
-        });
-        if (response.status === 200) {
-            console.log("Quantity changed");
-        }
+      const response = await axios.put(`http://localhost:8080/books/${id}/quantity/${action}`, action, {
+        withCredentials: true
+      });
+      if (response.status === 200) {
+        console.log("Quantity changed");
+      }
     } catch (error) {
-        console.error("Error updating quantity:", error);
+      console.error("Error updating quantity:", error);
     }
-}
+  }
 
   return (
     <div style={styles.container}>
@@ -70,14 +78,14 @@ const BookDetails = () => {
         <button
           onClick={() => navigate(`/books/${id}/issue`)}
           className="btn m-1 py-3 btn-outline-success flex-grow-1"
-          style={{ flexBasis: "40%" }} disabled={book?.quantity===0?true:false}
+          style={{ flexBasis: "40%" }} disabled={book?.quantity === 0 ? true : false}
 
         >
           IssueBook
         </button>
         <button
           onClick={async () => {
-            
+
             const memberId = window.prompt("Enter member Id: ");
             if (memberId)
               await axios.put(`http://localhost:8080/books/${id}/issues/return?memberId=${memberId}`, null, { withCredentials: true }).then(async (response) => {
@@ -85,7 +93,7 @@ const BookDetails = () => {
                 await updateQty("increase");
                 navigate("/books");
               })
-                .catch((err) => window.alert("Status code: " + err.status + ", No issues found for the book with member ID: "+memberId));
+                .catch((err) => window.alert("Status code: " + err.status + ", No issues found for the book with member ID: " + memberId));
           }}
           className="btn  btn-outline-secondary m-1 py-3  flex-grow-1"
           style={{ flexBasis: "40%" }}

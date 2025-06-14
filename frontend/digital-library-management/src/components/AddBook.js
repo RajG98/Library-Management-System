@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AddBook = () => {
@@ -12,16 +12,6 @@ const AddBook = () => {
         price: ''
     });
     const navigate = useNavigate();
-    const genres = ["FICTION",
-        "NON_FICTION",
-        "FANTASY",
-        "MYSTERY",
-        "SCIENCE_FICTION",
-        "BIOGRAPHY",
-        "HISTORY",
-        "ROMANCE",
-        "HORROR",
-        "THRILLER"];
 
     const handleChange = (e) => {
         setBook({ ...book, [e.target.name]: e.target.value });
@@ -29,13 +19,13 @@ const AddBook = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (Number(book.publicationYear) < 1800 || Number(book.publicationYear)>Number(new Date().getFullYear())) {
+        if (Number(book.publicationYear) < 1800 || Number(book.publicationYear) > Number(new Date().getFullYear())) {
             alert("Enter a valid publication Year!");
             return;
         }
-        axios.post("http://localhost:8080/books/secure-endpoint", { ...book,createdAt:new Date().toLocaleDateString,updatedAt:new Date().toLocaleDateString }, {
+        await axios.post("http://localhost:8080/books/secure-endpoint", { ...book, createdAt: new Date().toLocaleDateString, updatedAt: new Date().toLocaleDateString }, {
             withCredentials: true, headers: {
-            "Content-Type":"application/json"
+                "Content-Type": "application/json"
             }
         }).then((response) => {
             console.log(response.data);
@@ -43,13 +33,21 @@ const AddBook = () => {
                 alert('Book added successfully!');
             }
         }).catch((err) => {
-            
-        alert("Something went wrong");
+
+            alert("Something went wrong");
             console.error("Something went wrong", err);
         })
-        
+
         navigate("/books");
     };
+    useEffect(() => {
+        const fetchCategories = async () => {
+            await axios.get("http://localhost:8080/books/categories", { withCredentials: true })
+                .then((response) => setGenres(response.data)).catch((err) => console.error("Something went wrong", err));
+        };
+        fetchCategories();
+    }, [])
+    const [genres, setGenres] = useState([]);
 
     return (
         <div className="container mt-5">
@@ -86,10 +84,10 @@ const AddBook = () => {
                     <select name="genre" id="genre" className='form-control' defaultValue={""} required onChange={handleChange}>
                         <option value="" disabled>Select a Genre</option>
                         {genres.map((genre) => {
-                            return(<option key={genre} value={genre}>{genre }</option>)
+                            return (<option key={genre} value={genre}>{genre}</option>)
                         })}
                     </select>
-                    
+
                 </div>
                 <div className="form-group mb-3">
                     <label htmlFor="publicationYear">Publication Year</label>

@@ -3,17 +3,22 @@ package com.project.DigitalLibraryManagement.service;
 import com.project.DigitalLibraryManagement.enums.Genre;
 import com.project.DigitalLibraryManagement.exception.ResourceNotFoundException;
 import com.project.DigitalLibraryManagement.model.Book;
+import com.project.DigitalLibraryManagement.model.Issue;
 import com.project.DigitalLibraryManagement.repo.BookRepository;
+import com.project.DigitalLibraryManagement.repo.IssueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class BookService {
     @Autowired
     private BookRepository repo;
+    @Autowired
+    private IssueRepository issueRepository;
 
     public List<Book> findAll(String search) {
         if(!search.isEmpty())return repo.findByTitle(search);
@@ -39,11 +44,15 @@ public class BookService {
     }
 
     public void delete(int id) {
+        Issue isIssued = issueRepository.existsByBook_Id(id);
+        if (isIssued!=null ) {
+            throw new IllegalStateException("Cannot delete book: It is currently issued.");
+        }
         repo.deleteById(id);
     }
 
     public List<Genre> getCategories() {
-        return repo.fetchCategories();
+        return Arrays.asList(Genre.values());
     }
 
     public List<Book> getBookByCategory(Genre category) {

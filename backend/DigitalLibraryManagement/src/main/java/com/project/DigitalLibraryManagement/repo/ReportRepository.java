@@ -13,7 +13,6 @@ public interface ReportRepository extends PagingAndSortingRepository<Issue,Integ
     @Query("SELECT new com.project.DigitalLibraryManagement.dto.BookReportDTO(b.title,b.author,i.issueDate,i.dueDate,COALESCE(i.fine, 0)) "
     +"FROM Issue i "
     +"LEFT JOIN i.book b "
-    +"WHERE i.issuedStatus='ISSUED' "
     +"ORDER BY i.issueDate DESC")
     List<BookReportDTO>  generateReport();
 }

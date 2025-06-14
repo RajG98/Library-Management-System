@@ -9,16 +9,23 @@ const Books = () => {
   const [input, setInput] = useState("");
   const navigate = useNavigate();
   const { user } = useAuth();
+  const handleSearch = async (e) => {
+    e?.preventDefault();
+    if (input)
+      await axios.get(`http://localhost:8080/books?search=${input}`, { withCredentials: true })
+        .then((response) => setBooks(response.data)).catch((err) => console.error("Something went wrong", err));
+    else fetchBooks();
+  }
   useEffect(() => {
     
-    fetchBooks();
+    handleSearch();
     const fetchCategories = async () => {
       await axios.get("http://localhost:8080/books/categories", { withCredentials: true })
         .then((response) => setCategories(response.data)).catch((err) => console.error("Something went wrong", err));
     };
     fetchCategories();
-    
-  }, []);
+
+  }, [input]);
   const fetchBooks = async () => {
     await axios
       .get("http://localhost:8080/books", {
@@ -46,48 +53,41 @@ const Books = () => {
         }).catch((err) => console.error("Something went wrong", err));
     else fetchBooks();
   }
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (input)
-      await axios.get(`http://localhost:8080/books?search=${input}`, { withCredentials: true })
-        .then((response) => setBooks(response.data)).catch((err) => console.error("Something went wrong", err));
-    else fetchBooks();
-  }
+  
   return (
     <div className="container-fluid">
       <div className=" d-flex justify-content-between my-3">
         <div className=" d-flex align-items-center justify-content-start flex-wrap">
           <h1 className="mb-0 ">Books List</h1>
           {user?.username === "admin" ? (
-            <button onClick={()=>navigate("add")} className="btn btn-success ms-lg-3 align-self-center ms-sm-1">AddBook</button>) : ""}
+            <button onClick={() => navigate("add")} className="btn btn-success ms-lg-3 align-self-center ms-sm-1">AddBook</button>) : ""}
         </div>
         <div className="d-lg-flex align-items-center">
           <div className="d-flex me-lg-2">
-          <label className="flex-grow-1 align-self-center me-md-2" htmlFor="category">Category</label>
-          <select className="form-control form-control-sm flex-grow-1 align-self-center" name="category" id="category" defaultValue={""} onChange={handleCategoryChange}>
-            <option value="">Select a category</option>
-            {categories.map((category) => {
-              return <option value={category} key={category}>{category}</option>
-            })}
+            <label className="flex-grow-1 align-self-center me-md-2" htmlFor="category">Category</label>
+            <select className="form-control form-control-sm flex-grow-1 align-self-center" name="category" id="category" defaultValue={""} onChange={handleCategoryChange}>
+              <option value="">Select a category</option>
+              {categories.map((category) => {
+                return <option value={category} key={category}>{category}</option>
+              })}
             </select>
-            </div>
-        <form className="d-flex align-items-center" role="search" onSubmit={handleSearch}>
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-            name="search"
-            onChange={(e) => {
-              setInput(e.target.value)
-              handleSearch(e)
-            }}
-          />
-          <button  className="btn btn-outline-success" type="submit">
-            Search
-          </button>
-          </form>
           </div>
+          <form className="d-flex align-items-center" role="search" onSubmit={handleSearch}>
+            <input
+              className="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+              name="search"
+              onChange={ (e) => {
+                setInput(e.target.value)
+              }}
+            />
+            <button className="btn btn-outline-success" type="submit">
+              Search
+            </button>
+          </form>
+        </div>
       </div>
       <table className="table">
         <thead>
@@ -115,7 +115,7 @@ const Books = () => {
                 <td>{book.quantity}</td>
                 <td className="d-flex flex-wrap">
                   <button className="btn btn-success flex-grow-1" onClick={() => handleIssueBook(book.id)} style={{ flexBasis: "40%" }}
-                    disabled={book.quantity===0?true:false}>IssueBook</button>
+                    disabled={book.quantity === 0 ? true : false}>IssueBook</button>
                   <button className="btn btn-light flex-grow-1" onClick={() => handleDetails(book.id)} style={{ flexBasis: "40%" }}>Details</button>
                 </td>
               </tr>

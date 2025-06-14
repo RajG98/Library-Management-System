@@ -17,7 +17,9 @@ public interface IssueRepository extends JpaRepository<Issue,Integer> {
 
     @Query("SELECT i FROM Issue i WHERE i.member.id=:member_id AND i.book.id=:book_id")
     public Optional<List<Issue>> findByMemberAndBookId(@Param("member_id") String memberId,@Param("book_id") int bookId);
-
     @Query("SELECT i FROM Issue i WHERE i.member.id=:member_id AND i.issuedStatus<>'RETURNED' AND i.book.id=:id")
     public Optional<List<Issue>> findByMemberId(@Param("member_id") String memberId,@Param("id") String id);
+    @Query("SELECT i FROM Issue i WHERE i.issuedStatus<>'RETURNED' AND i.book.id=:id")
+    public Issue existsByBook_Id(int id);
+
 }

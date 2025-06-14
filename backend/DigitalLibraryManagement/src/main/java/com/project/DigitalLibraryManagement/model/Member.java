@@ -31,7 +31,7 @@ public class Member {
     @Column(name = "valid_till")
     private LocalDate validTill=createdAt.plusYears(1);
     @JsonIgnore
-    @OneToMany(mappedBy = "member",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "member",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Issue> issues;
 
 }

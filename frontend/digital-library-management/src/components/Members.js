@@ -10,8 +10,8 @@ const Members = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    fetchMembers();
-  }, []);
+    handleSearch();
+  }, [input]);
 
   const fetchMembers = async () => {
     await axios
@@ -38,7 +38,7 @@ const Members = () => {
   };
 
   const handleSearch = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     if (input)
       await axios
         .get(`http://localhost:8080/members/search?name=${input}`, { withCredentials: true })
@@ -88,13 +88,13 @@ const Members = () => {
             members.map((member) => (
               <tr key={member.id}>
                 <td>{member.id}</td>
-                <td>{member.firstName+" "+member.lastName}</td>
+                <td>{member.firstName + " " + member.lastName}</td>
                 <td>{member.email}</td>
                 <td>{member.phone}</td>
                 <td>{member.createdAt}</td>
                 <td>{member.validTill}</td>
                 <td className="d-flex flex-wrap">
-                  
+
                   {user?.username === "admin" && (
                     <button
                       className="btn btn-light flex-grow-1"
@@ -106,7 +106,7 @@ const Members = () => {
                   )}
                 </td>
                 <td className="d-flex flex-wrap">
-                  
+
                   {user?.username === "admin" && (
                     <button
                       className="btn btn-danger flex-grow-1"
