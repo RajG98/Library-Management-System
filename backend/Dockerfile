@@ -10,7 +10,7 @@ COPY src ./src
 COPY .mvn .mvn
 COPY mvnw ./
 
-
+RUN chmod +x mvnw
 # Package the application
 RUN ./mvnw clean package -DskipTests
 
