@@ -35,8 +35,8 @@ const BookDetails = () => {
         navigate("/books");
       }).catch((err) => {
 
-        alert("Something went wrong");
-        console.error("Something went wrong", err);
+        alert(err.response.data);
+        // console.error("Something went wrong: ", err.response.data);
       })
   };
   const updateQty = async (action) => {
