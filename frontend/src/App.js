@@ -18,26 +18,31 @@ import Members from './components/Members';
 import AddMember from './components/AddMember';
 import EditMemberForm from './components/EditMemberForm';
 import ReportPage from './components/ReportPage';
+import axios from 'axios';
 import { useAuth } from './context/AuthContext';
 
-const ProtectedRoute = ({ isAuthenticated, children }) => {
-  if (isAuthenticated === null) {
-    // Optional loading spinner or placeholder
-    return <div>Loading...</div>;
-  }
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-};
+
 
 const App = () => {
-  const { user } = useAuth();
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    // Initialize state from localStorage on the first render
-    return !!localStorage.getItem("user");
-  });
-  useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem("user"));
-  },[user])
+  const { user,loading } = useAuth();
+
+  const isAuthenticated = !!user;
+  
+  const ProtectedRoute = ({ children }) => {
+
+
+
+    return isAuthenticated ? children : <Navigate to="/login?sessionExpired=true" />;
+  };
+  const PublicRoute = ({ children }) => {
+
+
+    return isAuthenticated ? <Navigate to="/" /> : children;
+  };
+if (loading) {
+  return <div>Loading...</div>; // or a loader component
+}
 
   return (
     <Router>
@@ -46,7 +51,7 @@ const App = () => {
         <Route
           path="/"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute>
               <Home />
             </ProtectedRoute>
           }
@@ -54,7 +59,7 @@ const App = () => {
         <Route
           path="/books/report"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute>
               <ReportPage />
             </ProtectedRoute>
           }
@@ -62,7 +67,7 @@ const App = () => {
         <Route
           path="/books"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <Books />
             </ProtectedRoute>
           }
@@ -70,7 +75,7 @@ const App = () => {
         <Route
           path="/members"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute>
               <Members />
             </ProtectedRoute>
           }
@@ -78,7 +83,7 @@ const App = () => {
         <Route
           path="/books/:id/details"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <BookDetails />
             </ProtectedRoute>
           }
@@ -86,7 +91,7 @@ const App = () => {
         <Route
           path="/books/:id/issue"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <IssueForm />
             </ProtectedRoute>
           }
@@ -94,7 +99,7 @@ const App = () => {
         <Route
           path="/books/:id/details/issueHistory"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <IssueHistory />
             </ProtectedRoute>
           }
@@ -102,7 +107,7 @@ const App = () => {
         <Route
           path="/books/:id/details/edit"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <EditBookForm />
             </ProtectedRoute>
           }
@@ -110,7 +115,7 @@ const App = () => {
         <Route
           path="/members/:id/edit"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <EditMemberForm />
             </ProtectedRoute>
           }
@@ -118,7 +123,7 @@ const App = () => {
         <Route
           path="/books/add"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <AddBook />
             </ProtectedRoute>
           }
@@ -126,7 +131,7 @@ const App = () => {
         <Route
           path="/members/add"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <AddMember />
             </ProtectedRoute>
           }
@@ -134,12 +139,16 @@ const App = () => {
         <Route
           path="/books/:id/details/issueHistory/:issueId/edit"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
+            <ProtectedRoute >
               <EditIssueForm />
             </ProtectedRoute>
           }
         />
-        <Route path="/login" element={isAuthenticated?<Navigate to="/"/>:<LoginForm />}/>
+        <Route path="/login" element={
+          <PublicRoute>
+            <LoginForm />
+          </PublicRoute>
+        } />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

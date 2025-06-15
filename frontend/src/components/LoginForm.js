@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
   const { login } = useAuth();
+  const location = useLocation();
+  const sessionExpired = new URLSearchParams(location.search).get('sessionExpired');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
@@ -11,12 +13,12 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
     login({ username, password });
     navigate("/");
   };
 
   return (
+
     <div className="container mt-5">
       <div className="row justify-content-md-center">
         <div className="col-md-4">
@@ -48,9 +50,18 @@ const LoginForm = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
+            <button type="submit" className="btn btn-primary w-100 mb-3">
               Submit
             </button>
+            <div style={{
+              lineHeight: 0.5,
+              fontSize: '0.8rem',
+              fontStyle: 'italic',
+              textAlign: 'center'
+            }}>
+              <p>Admin: {'{username:"admin", password:"admin"}'}</p>
+              <p>User: {'{username:"user", password:"user"}'}</p>
+            </div>
           </form>
         </div>
       </div>

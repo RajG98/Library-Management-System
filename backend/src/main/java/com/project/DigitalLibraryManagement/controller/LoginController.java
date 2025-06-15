@@ -2,6 +2,7 @@ package com.project.DigitalLibraryManagement.controller;
 import com.project.DigitalLibraryManagement.handler.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
+import java.util.Map;
 
 @RestController
 public class LoginController {
@@ -19,6 +22,7 @@ public class LoginController {
         this.customSuccessHandler=customSuccessHandler;
         this.authenticationManager=authenticationManager;
     }
+
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response) {
         String username = loginRequest.username();
@@ -35,6 +39,15 @@ public class LoginController {
         }
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/check-auth")
+    public ResponseEntity<?> checkAuth(Principal principal){
+        if (principal != null) {
+            return ResponseEntity.ok().body(Map.of("username", principal.getName()));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
     public record LoginRequest(String username,String password){
 

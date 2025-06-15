@@ -12,7 +12,7 @@ const Home = () => {
     <div>
       <h1 className="d-flex justify-content-center py-2">Digital Library Management System</h1>
       <h3 className="d-flex justify-content-center">Welcome: {user?.username}</h3>
-      {user.username==="admin" && <div className="d-flex justify-content-center py-2">
+      {user?.username==="admin" && <div className="d-flex justify-content-center py-2">
         <button
           type="button"
           className="btn btn-primary"

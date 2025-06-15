@@ -46,6 +46,12 @@ public class SecurityConfig {
                         .hasAnyRole("USER","ADMIN")
                         .anyRequest()
                         .authenticated())
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            // Sends 401 when user is not logged in or session expired
+                            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: Please login.");
+                        })
+                )
 
                 .logout(logout->logout
                         .logoutUrl("/logout")
@@ -57,7 +63,6 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .clearAuthentication(true))
-//                .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
     @Bean
