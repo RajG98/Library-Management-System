@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
   const { login } = useAuth();
-  const location = useLocation();
-  const sessionExpired = new URLSearchParams(location.search).get('sessionExpired');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();

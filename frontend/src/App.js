@@ -1,7 +1,7 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import NavBar from './components/NavBar';
@@ -18,31 +18,30 @@ import Members from './components/Members';
 import AddMember from './components/AddMember';
 import EditMemberForm from './components/EditMemberForm';
 import ReportPage from './components/ReportPage';
-import axios from 'axios';
 import { useAuth } from './context/AuthContext';
 
 
 
 
 const App = () => {
-  const { user,loading } = useAuth();
+  const { user, loading } = useAuth();
 
   const isAuthenticated = !!user;
-  
+
   const ProtectedRoute = ({ children }) => {
 
 
 
-    return isAuthenticated ? children : <Navigate to="/login?sessionExpired=true" />;
+    return isAuthenticated ? children : <Navigate to="/login" />;
   };
   const PublicRoute = ({ children }) => {
 
 
     return isAuthenticated ? <Navigate to="/" /> : children;
   };
-if (loading) {
-  return <div>Loading...</div>; // or a loader component
-}
+  if (loading) {
+    return <div>Loading...</div>; // or a loader component
+  }
 
   return (
     <Router>
