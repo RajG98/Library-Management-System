@@ -1,5 +1,7 @@
 package com.project.DigitalLibraryManagement.controller;
+import com.project.DigitalLibraryManagement.exception.UnauthorizedException;
 import com.project.DigitalLibraryManagement.handler.CustomAuthenticationSuccessHandler;
+import com.project.DigitalLibraryManagement.model.Book;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
@@ -7,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -42,12 +45,15 @@ public class LoginController {
     }
 
     @GetMapping("/check-auth")
-    public ResponseEntity<?> checkAuth(Principal principal){
-        if (principal != null) {
-            return ResponseEntity.ok().body(Map.of("username", principal.getName()));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    public ResponseEntity<?> checkAuth(){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String role= authentication.getAuthorities().toString();
+        if(role.contains("ROLE_ADMIN")) {
+            return new ResponseEntity<>(Map.of("username","admin"), HttpStatus.OK);
+        }else if(role.contains("ROLE_USER")){
+            return new ResponseEntity<>(Map.of("username","user"), HttpStatus.OK);
         }
+        throw new UnauthorizedException("User role not recognized");
     }
     public record LoginRequest(String username,String password){
 
